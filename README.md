@@ -8,11 +8,13 @@ El Brazo Robótico cuenta con dos modos:
     - Programar: que permite registrar una serie de pasos que realizará.
     - Ejecutar: que permite realizar la secuencia de pasos registrarada en el modo anterior.
 Cuenta con un botón de paro de emergencia que permite que el brazo deje de ejecutar lo que esta haciendo y pare.
+
 Los ejes del brazo son:
    - Cintura o base: que gira a 360° por medio de un motor a pasos.
    - Codo: que permite que avance o retroceda el brazo.
    - Hombro: que permite levantar o bajar el brazo veticalmente.
    - Garra o pinza: que abre y cierra para lograr agarrar cosas.
+
 Estos tres últimos se realizan utilizando servomotores.
 El Brazo es manipulado a través de una interfaz en Java para programarlo y con ello lograr su optima ejecución.
 Se utilizan dos LEDs para indicar cuando el brazo esta en ejecución o en programación para que el usuario pueda identificar esos modos facilmente. 
