@@ -19,27 +19,33 @@ prendera un led rojo y asi indicar que el brazo no esta en ejecicion.
 //libreria para controlar los servos.
 #include <Servo.h>
 
+int pulsador=0;              //almacena el estado del botón
+int estado=0;                //0=led apagado, 1=led encendido
+int pulsadorAnt=0;           //almacena el estado anterior del boton
+
 // crear un objetos tipo servo para controlar los servos
 Servo myservo;  
 Servo myservo2;
 Servo myservo3;
 
 //variables para guardar el mensaje que se envo desde java.
-String Mensaje="",Mensaje2="",Mensaje3="",Mensaje4="";
+String Mensaje="",Mensaje2="",Mensaje3="",Mensaje4="",Mensaje5="",Mensaje6="",Mensaje7="",Mensaje8="",Mensaje9="",Mensaje10="",Mensaje11="",Mensaje12="";
 //variable que guarda el primer dato (char) de el mensaje enviado desde java.
 char pestana;
 //variables para el estado inicial de los servos
 int grado=30;
 int grado2=30;
+int grado3=30;
+int grado4=30;
 
 // Tiempo de retardo en milisegundos (Velocidad del Motor)
 int retardo=5;   
  // valor recibido en grados       
-int dato_rx;  
+int dato_rx,dato_rx2;  
 // Valor en grados donde se encuentra el motor         
 int numero_pasos = 0;  
 // Almacena la cadena de datos recibida 
-String leeCadena;       
+String leeCadena,leeCadena2;       
 
 // Pin para el LED
 int led1 = 12;  
@@ -47,8 +53,12 @@ int led1 = 12;
 int led2 = 13; 
 // Pin para el Boton                        
 int boton= 2;
+//contador para el boton;
+int contador=0;
 
+int estado1=0;
 
+//lectura de el estado del boton.
 
 
 //inicializacion de los pines que se ocuparan en el arduino
@@ -76,21 +86,91 @@ void setup() {
    //inicializacion del boton como entrada.
    pinMode(boton, INPUT);
 
+   myservo.write(60);
+   myservo2.write(50);
+ 
    // se inicializa el serial.
-    Serial.begin(9600);
-
-    //inicializacion de la interrupcion
-    attachInterrupt(digitalPinToInterrupt(boton),interrupthandler,FALLING);  
-
+   Serial.begin(9600);
 }
- // funcion que ejecuta la interrupcion.
-void interrupthandler(){
-  //encender el led1.
-   digitalWrite(led1,HIGH);
-   //encender el les2.
-   digitalWrite(led2,HIGH);
-   //espera de 5 segundos.
-   delay(5000); 
+
+//servos segundo movimiento (2.1)
+void inicial4(){
+  //la variable grado toma el valor de mensaje.
+    grado=Mensaje11.toInt();
+    //el servo se ejecuta con el valor de la variable grado
+    myservo.write(grado);
+    //se le da un tiempo de 100 milisegundos.
+    delay (1000);
+
+    //la variabe gardo2 toma el valor de mensaje2. 
+    grado2=Mensaje12.toInt();
+    //el servo se ejecuta con el valor de la variable grado2
+    myservo2.write(grado2);
+    //se le da un tiempo de 100 milisegundos.
+    delay (1000);
+}
+
+//motor segunda vez
+void inicial3(){
+   // Girohacia la izquierda en grados
+    while (dato_rx2>numero_pasos){   
+       paso_izq();
+       numero_pasos = numero_pasos + 1;
+   }
+    // Giro hacia la derecha en grados
+   while (dato_rx2<numero_pasos){ 
+        paso_der();
+        numero_pasos = numero_pasos -1;
+   }  
+
+    // Inicializamos la cadena de caracteres recibidos 
+    leeCadena2 = "";  
+    //apagamos el motor.
+    apagado();
+
+
+    //la variable grado toma el valor de mensaje.
+    grado=Mensaje5.toInt();
+    //el servo se ejecuta con el valor de la variable grado
+    myservo.write(grado);
+    //se le da un tiempo de 100 milisegundos.
+    delay (2000);
+
+    //la variabe gardo2 toma el valor de mensaje2. 
+    grado2=Mensaje6.toInt();
+    //el servo se ejecuta con el valor de la variable grado2
+    myservo2.write(grado2);
+    //se le da un tiempo de 100 milisegundos.
+    delay (2000);
+    
+    //si la variable Mensaje3 es igual a 12, entonces se ejecutara el codigo detro del if.
+    if(Mensaje7 == "12"){
+      // se abrira la pinza del brazo.
+      abrir();
+    // si la variable mensaje3 es igual a 70, entonces se ejecutara el codigo detro del if.
+    }else if(Mensaje7 == "70"){
+      // se cerrara la pinza del brazo.
+      cerrar();
+  }
+  
+}
+
+//servos primer movimiento (1.1)
+void inicial2(){  
+  //la variable grado toma el valor de mensaje.
+    grado=Mensaje9.toInt();
+    //el servo se ejecuta con el valor de la variable grado
+    myservo.write(grado);
+    //se le da un tiempo de 100 milisegundos.
+    delay (1000);
+
+    //la variabe gardo2 toma el valor de mensaje2. 
+    grado2=Mensaje10.toInt();
+    //el servo se ejecuta con el valor de la variable grado2
+    myservo2.write(grado2);
+    //se le da un tiempo de 100 milisegundos.
+    delay (1000);
+
 }
 
 //loop que repetira las instrucciones.
@@ -103,25 +183,62 @@ void loop() {
   //a continuacion se guarda en la variable pestana el primer caracter del mensaje de java para saber que se ejecutara.
   pestana=Decimal_to_ASCII(Serial.read());
   
-    // a continuacion se guardara en la variables mensaje cada caracter para formar el mensaje completo.
-    Mensaje=Mensaje+Decimal_to_ASCII(Serial.read());
-    Mensaje=Mensaje+Decimal_to_ASCII(Serial.read());
+  // a continuacion se guardara en la variables mensaje cada caracter para formar el mensaje completo.
+  Mensaje=Mensaje+Decimal_to_ASCII(Serial.read());
+  Mensaje=Mensaje+Decimal_to_ASCII(Serial.read());
 
-    Mensaje2=Mensaje2+Decimal_to_ASCII(Serial.read());
-    Mensaje2=Mensaje2+Decimal_to_ASCII(Serial.read());
+  Mensaje2=Mensaje2+Decimal_to_ASCII(Serial.read());
+  Mensaje2=Mensaje2+Decimal_to_ASCII(Serial.read());
 
-    Mensaje3=Mensaje3+Decimal_to_ASCII(Serial.read());
-    Mensaje3=Mensaje3+Decimal_to_ASCII(Serial.read());
+  Mensaje3=Mensaje3+Decimal_to_ASCII(Serial.read());
+  Mensaje3=Mensaje3+Decimal_to_ASCII(Serial.read());
+ 
+  Mensaje5=Mensaje5+Decimal_to_ASCII(Serial.read());
+  Mensaje5=Mensaje5+Decimal_to_ASCII(Serial.read());
+
+  Mensaje6=Mensaje6+Decimal_to_ASCII(Serial.read());
+  Mensaje6=Mensaje6+Decimal_to_ASCII(Serial.read());
+
+  Mensaje7=Mensaje7+Decimal_to_ASCII(Serial.read());
+  Mensaje7=Mensaje7+Decimal_to_ASCII(Serial.read());
+  //servos
+  Mensaje9=Mensaje9+Decimal_to_ASCII(Serial.read());
+  Mensaje9=Mensaje9+Decimal_to_ASCII(Serial.read());
+
+  Mensaje10=Mensaje10+Decimal_to_ASCII(Serial.read());
+  Mensaje10=Mensaje10+Decimal_to_ASCII(Serial.read());
+
+  Mensaje11=Mensaje11+Decimal_to_ASCII(Serial.read());
+  Mensaje11=Mensaje11+Decimal_to_ASCII(Serial.read());
+
+  Mensaje12=Mensaje12+Decimal_to_ASCII(Serial.read());
+  Mensaje12=Mensaje12+Decimal_to_ASCII(Serial.read());
 
     //a continuacion en el while se realizara mientras el serial contenga algo.
-    while (Serial.available()) {   
+  while (Serial.available()>0 && contador<3) {   
+    contador=contador+1;
     delay(retardo);
     // Lee los caracteres.
     char c  = Serial.read();   
     // Convierte Caracteres a cadena de caracteres.  
     leeCadena += c;              
   }
+ 
+  if(leeCadena=="000"){
+    leeCadena="0";
+  }else if(leeCadena=="050"){
+    leeCadena="50";
+  }
 
+  //a continuacion en el while se realizara mientras el serial contenga algo.
+  while (Serial.available()) {   
+    delay(retardo);
+    // Lee los caracteres.
+    char c2  = Serial.read();   
+    // Convierte Caracteres a cadena de caracteres.  
+    leeCadena2 += c2;              
+  }
+ 
   //compara si la variable leeCadena contiene algo
   if (leeCadena.length()>0){  
     // Convierte Cadena de caracteres a Enteros     
@@ -133,68 +250,90 @@ void loop() {
     dato_rx = (dato_rx * 1.4222222222); 
   } 
   
+  if (leeCadena2.length()>0){  
+    // Convierte Cadena de caracteres a Enteros     
+    dato_rx2 = leeCadena2.toInt();   
+    // Envia valor en Grados
+    Serial.print(dato_rx2);  
+    delay(retardo);
+    // Ajuste de 512 vueltas a los 360 grados.
+    dato_rx2 = (dato_rx2 * 1.4222222222); 
+  } 
+
   // si el valor de la variable pestana es igual a 2 ejecutara el codigo.
   if(pestana == '2'){
-    //enciende el led 1.
-    digitalWrite(led1,HIGH);
-    //apaga el led 2.
-    digitalWrite(led2,LOW);
-    
-    // Girohacia la izquierda en grados
-    while (dato_rx>numero_pasos){   
-       paso_izq();
-       numero_pasos = numero_pasos + 1;
-   }
-    // Giro hacia la derecha en grados
-   while (dato_rx<numero_pasos){ 
+    int pulsador = digitalRead(2);
+    while(pulsador==0){
+
+      //enciende el led 1.
+      digitalWrite(led1,HIGH);
+      //apaga el led 2.
+      digitalWrite(led2,LOW);
+     
+      // Girohacia la izquierda en grados
+      while (dato_rx>numero_pasos){   
+        paso_izq();
+        numero_pasos = numero_pasos + 1;
+      }
+     
+      // Giro hacia la derecha en grados
+      while (dato_rx<numero_pasos){ 
         paso_der();
         numero_pasos = numero_pasos -1;
-   }
+      }
+     
+      // Inicializamos la cadena de caracteres recibidos 
+      leeCadena = "";
+      contador=0;
+      //apagamos el motor.
+      apagado();
 
-    // Inicializamos la cadena de caracteres recibidos 
-    leeCadena = "";  
-    //apagamos el motor.
-    apagado();
+      //la variable grado toma el valor de mensaje.
+      grado=Mensaje.toInt();
+      //el servo se ejecuta con el valor de la variable grado
+      myservo.write(grado);
+      //se le da un tiempo de 100 milisegundos.
+      delay (1000);
 
-
-    //la variable grado toma el valor de mensaje.
-    grado=Mensaje.toInt();
-    //el servo se ejecuta con el valor de la variable grado
-    myservo.write(grado);
-    //se le da un tiempo de 100 milisegundos.
-    delay (100);
-
-    //la variabe gardo2 toma el valor de mensaje2. 
-    grado2=Mensaje2.toInt();
-    //el servo se ejecuta con el valor de la variable grado2
-    myservo2.write(grado2);
-    //se le da un tiempo de 100 milisegundos.
-    delay (100);
+      //la variabe gardo2 toma el valor de mensaje2. 
+      grado2=Mensaje2.toInt();
+      //el servo se ejecuta con el valor de la variable grado2
+      myservo2.write(grado2);
+      //se le da un tiempo de 100 milisegundos.
+      delay (100);
     
-    //si la variable Mensaje3 es igual a 12, entonces se ejecutara el codigo detro del if.
-    if(Mensaje3 == "12"){
-      // se abrira la pinza del brazo.
-      abrir();
-    // si la variable mensaje3 es igual a 70, entonces se ejecutara el codigo detro del if.
-    }else if(Mensaje3 == "70"){
-      // se cerrara la pinza del brazo.
-      cerrar();
-  }
+      //si la variable Mensaje3 es igual a 12, entonces se ejecutara el codigo detro del if.
+      if(Mensaje3 == "12"){
+        // se abrira la pinza del brazo.
+        abrir();
+        // si la variable mensaje3 es igual a 70, entonces se ejecutara el codigo detro del if.
+      }else if(Mensaje3 == "70"){
+        // se cerrara la pinza del brazo.
+        cerrar();
+      }
 
-   // se vacian las variables de mensaje antes de acabar el if.
+      inicial2();
+      inicial3();
+      inicial4();
+   
+      pulsador = digitalRead(2); //refresh value of variable
+    }
+  }
+ 
+ // se vacian las variables de mensaje antes de acabar el if.
    Mensaje="";
    Mensaje2="";
    Mensaje3="";
    Mensaje4="";
-    
-  }
-
-   // se vacian las variables de mensaje antes de acabar el if.
-   Mensaje="";
-   Mensaje2="";
-   Mensaje3="";
-   Mensaje4="";
-    delay(2000);  
+   Mensaje5="";
+   Mensaje6="";
+   Mensaje7="";
+   Mensaje8="";
+   Mensaje9="";
+   Mensaje10="";
+   Mensaje11="";
+   Mensaje12="";
+    delay(2000); 
 }
 
 // metodo de abrir pinza del brazo.
