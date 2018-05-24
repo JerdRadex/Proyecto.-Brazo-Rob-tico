@@ -2,7 +2,7 @@
 PROYECTO. Brazo Robótico Java-Arduino. 		Versión 1	            17/05/2018
 
 Descripción
------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 Realización de un Brazo Robótico de 4 ejes logrando controlarlo y programarlo, simulando las funciones básicas de un robot industrial utilizando Arduino y Java.
 El Brazo Robótico cuenta con dos modos:
     - Programar: que permite registrar una serie de pasos que realizará.
@@ -16,8 +16,8 @@ Los ejes del brazo son:
 Estos tres últimos se realizan utilizando servomotores.
 El Brazo es manipulado a través de una interfaz en Java para programarlo y con ello lograr su optima ejecución.
 Se utilizan dos LEDs para indicar cuando el brazo esta en ejecución o en programación para que el usuario pueda identificar esos modos facilmente. 
-Se utiliza la memoria volátil de arduino para almacenar los valores del brazo, esto para que si existe algún fallo o interrupción de energía al reanudarlo pueda continuar realizando los pasos que seguían sin reiniciars, sino continuando donde se quedo.
------------------------------------------------------------
+
+------------------------------------------------------------------------------------------
 
 Requisitos básicos para la instalación y utilización del programa
 -----------------------------------------------------------
